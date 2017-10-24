@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 class CurrencyPair(object):
     
@@ -7,6 +8,9 @@ class CurrencyPair(object):
         self.quoteCurrency = quoteCurrency
     def __str__(self):
         return self.baseCurrency+self.quoteCurrency
+    
+    def ticker(self):
+        return self.__str__()
 
 class PriceTimestamp(object):
     def __init__(self,price,timestamp):
@@ -14,8 +18,7 @@ class PriceTimestamp(object):
         self.timestamp = self.convertTimestamp(timestamp)
         
     def convertTimestamp(self,timestamp):
-        return pd.to_datetime(timestamp).round("1min")
-    
+        return pd.to_datetime(timestamp)
 
 
 
@@ -29,22 +32,25 @@ class FXSpot(Product):
         self.Exchange     = Exchange
         self.ExchangeName = Exchange.__str__()
         self.CurrencyPair = CurrencyPair
+        self.ticker       = CurrencyPair.__str__()
         self.TimeSeries   = pd.DataFrame(columns=["Price"+self.CurrencyPair.__str__()])
         self.SetPrice()
-        self.SaveTimeSeries()
         
+    def DataframePresentation(self):
+        return pd.DataFrame({"Price"+self.ticker:[self.priceTimestamp.price]},
+                                index =[self.priceTimestamp.timestamp])
+    
     def __str__(self):
-        return str(pd.DataFrame({"Price"+self.CurrencyPair.__str__():[self.priceTimestamp.price]},
+        return str(pd.DataFrame({"Price"+self.ticker:[self.priceTimestamp.price]},
                                 index =[self.priceTimestamp.timestamp]))
         
     def SaveTimeSeries(self,location = "/Users/jeroenderyck/Documents/Data/CryptoPrices/"):
-        path = os.path.join(location, '%s_%s.csv' % (self.ExchangeName, self.CurrencyPair.__str__()))
-        self.TimeSeries.to_csv(path)
+        path = os.path.join(location, '%s_%s.csv' % (self.ExchangeName, self.ticker))
+        self.TimeSeries.to_csv(path,"a")
         
-    def UpdateTimeSeries(self,location ="/Users/jeroenderyck/Documents/Data/CryptoPrices/"):
-        with open(location+self.ExchangeName+ self.CurrencyPair.__str__(), 'a') as database:
-            self.TimeSeries.to_csv(database, header=True)
-            
+    def GetPrice(self):
+        return self.priceTimestamp.price
+    
     def SetPrice(self):
         self.priceTimestamp = self.Exchange.GetPriceTimestamp(self.CurrencyPair)
         self.TimeSeries.loc[ self.priceTimestamp.timestamp] = self.priceTimestamp.price
@@ -53,3 +59,9 @@ class FXSpot(Product):
         self.priceTimestamp = self.Exchange.GetPriceTimestamp(self.CurrencyPair)
         self.TimeSeries.loc[ self.priceTimestamp.timestamp] = self.priceTimestamp.price
         self.SaveTimeSeries()
+        
+        
+        
+        
+        
+        
