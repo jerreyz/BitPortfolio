@@ -1,12 +1,16 @@
 # BitPortfolio
 
-Python based tool to get Crypto prices as well as track portfolios with holdings in crypto as well as stock markets
+Python based tool to get Crypto prices as well as track portfolios.
+Objective is to create a trading bot that executes a futures carry strategy.
+
 
 ---
 > # DataProviders 
-- GDAX
-- CryptoCompare
+## Websockets
+- GDAX Websocket
+- BitMEX Websocket
 
-> # TODO:
-- IB
-- Bitmex
+> ## TODO:
+-  Position tracking
+-  nginx integration
+-  Risk Management
