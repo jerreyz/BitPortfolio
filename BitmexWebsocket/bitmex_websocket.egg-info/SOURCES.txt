@@ -1,0 +1,6 @@
+setup.py
+bitmex_websocket.egg-info/PKG-INFO
+bitmex_websocket.egg-info/SOURCES.txt
+bitmex_websocket.egg-info/dependency_links.txt
+bitmex_websocket.egg-info/requires.txt
+bitmex_websocket.egg-info/top_level.txt
